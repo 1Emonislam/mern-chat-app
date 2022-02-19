@@ -1,1 +1,1 @@
-# mern-chat-app-server
+# mern-chat-app
