@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
@@ -6,21 +7,29 @@ const Login = () => {
     const [guestLogin, setGuestLogin] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const handleShow = () => setShowPassword(!showPassword);
+    const { isLoading, setIsLoading } = useState(false);
     const { register, handleSubmit } = useForm();
-    const [loginData, setLoginData] = useState([])
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
     const fetchPostLogin = async (loginData) => {
         try {
-            const { data } = await axios.post('/login', loginData).then(data => data);
-            setLoginData(data);
+            const { data } = await axios.post('http://localhost:5000/login', loginData);
+            console.log(data)
+            if (data?.message) {
+                setMessage(data.message);
+                window.localStorage.setItem("user", JSON.stringify(data))
+                setIsLoading(false);
+            };
         }
         catch (error) {
-            console.log(error.response)
+            setError(error?.response?.data?.error)
         }
     }
-    const onSubmit = data => {
-        fetchPostLogin(data)
-    };
-    console.log(loginData)
+    // console.log(message)
+    const onSubmit = async data => {
+        await fetchPostLogin(data)
+    }
+    // console.log(loginData)
     guestLogin?.email && fetchPostLogin(guestLogin);
     return (
         <>
@@ -49,7 +58,14 @@ const Login = () => {
                             }
                         </div>
                         <Link to="/forget-password" className="text-blue-700 text-center text-sm">Forgot password?</Link>
-                        <button type="submit" className="mt-4 mb-5 bg-green-500 hover:bg-green-700 py-3 text-white uppercase text-sm font-semibold rounded w-full">Login</button>
+                        {
+                            isLoading ? <><button type="submit" className="mt-4 mb-5 bg-green-500 hover:bg-green-700 py-3 text-white uppercase text-sm font-semibold rounded w-full" disabled>
+                                <div className=" flex justify-center items-center">
+                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+                                </div></button> </> : <> <button type="submit" className="mt-4 mb-5 bg-green-500 hover:bg-green-700 py-3 text-white uppercase text-sm font-semibold rounded w-full"> Login</button> </>
+                        }
+                        <p className='text-center text-red-500'>{error && error}</p>
+                        <p className='text-center text-green-500 '>{message && message}</p>
                         <div className="mt-2 md:w-full text-center text-sm">
                             <span>Not a Member?</span> <Link to="/register" className="text-blue-700 text-center text-sm">Register</Link>
                         </div>

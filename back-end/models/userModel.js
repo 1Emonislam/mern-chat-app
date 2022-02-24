@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
-        lowercase:true
+        lowercase: true
     },
     password: {
         type: String,
@@ -19,6 +19,8 @@ const userSchema = mongoose.Schema({
         default: 'https://www.booksie.com/files/profiles/22/mr-anonymous_230x230.png'
     }
 
+}, {
+    timestamps: true,
 })
 userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);

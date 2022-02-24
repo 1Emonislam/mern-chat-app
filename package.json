@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "strong-errors-handler": "^1.0.3"
   }
 }

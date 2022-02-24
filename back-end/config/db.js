@@ -4,7 +4,7 @@ const dbConnect = async () => {
         await mongoose.connect('mongodb://localhost:27017/ChatAppDB');
         console.log('mongoose connection successfully!')
     } catch (error) {
-        conosole.log(error);
+        console.log(error);
     }
 }
 module.exports = dbConnect;
